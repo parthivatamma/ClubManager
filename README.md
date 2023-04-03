@@ -1,0 +1,2 @@
+# ClubManager
+Hackathon project
