@@ -1,0 +1,7 @@
+a::after{
+    display: none !important;
+}
+
+.btn:hover{
+    color: black !important;
+}

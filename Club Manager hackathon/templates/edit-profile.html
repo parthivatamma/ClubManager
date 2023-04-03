@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block head %}
+<div class="d-flex bg-dark text-light w-100 py-2">
+    <a href="/"><img src="../static/website_images/Untitled.png"  height="50" class="ms-2"></a>
+    <img src="../static/user_uploads/{{session['Pic']}}" class="rounded-circle border border-dark me-3 my-auto"
+        style="width: 60px;height:60px;">
+</div>
+{% endblock head %}
+
+{% block content %}
+<div class="w-50 mx-auto">
+    <h4 class="">Change Profile Image</h4>
+
+    <form action="post" id="form" class="my-3">
+        <div class="form-floating mb-3">
+            <input type="file" class="form-control mx-auto" id="ImageLink" name="Image"
+                placeholder="Upload an image file" accept="Image/*">
+            <label for="ImageLink" class="mx-auto text-muted text-center">Change Profile Image</label>
+            <p class="text-muted">Images will be 60 px X 60 px</p>
+        </div>
+    <!-- <h4>Change Name</h4> -->
+        <div class="form-floating">
+            <input type="text" class="form-control my-3 mx-auto" id="floatingName" name="NName" placeholder="Name" value="{{d['Name']}}">
+            <label for="floatingname" class="mx-auto text-muted text-center">Full Name</label>
+        </div>
+    <!-- <h4>Change Password</h4> -->
+        <div class="form-floating">
+            <input type="password" class="form-control my-3 mx-auto" id="floatingPassword" name="NPass"
+                placeholder="Password">
+            <label for="floatingPassword" class="mx-auto text-muted text-center">New Password</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control my-3 mx-auto" id="floatingPassword" name="NPassConf"
+                placeholder="Password">
+            <label for="floatingPassword" class="mx-auto text-muted text-center">Confirm New Password</label>
+        </div>
+        <!-- <h4 class="border-bottom my-4">Confirm Current Password to Save Changes</h4> -->
+        <div class="form-floating mt-5">
+            <input type="password" class="form-control my-3 mx-auto" id="floatingPassword" name="CPass"
+                placeholder="Current Password">
+            <label for="floatingPassword" class="mx-auto text-muted text-center">Confirm Current Password</label>
+        </div>
+        <div>
+            <p class="text-danger text-center" style="visibility: hidden;" id="error">Text</p>
+        </div>
+        <div class="d-flex">
+            <button type="button" onclick="passCheck()" class="btn btn-outline-success w-50 me-2">Save Changes</button>
+            <a href="/logout" class="btn btn-outline-danger w-50">Logout</a>
+        </div>
+    </form>
+
+</div>
+<script>
+    function passCheck() {
+        var anything = new FormData(document.getElementById('form'));
+        console.log(anything)
+        fetch('/get-data',{method: 'POST', body: anything})
+            .then(function (response) {
+                return response.text()
+            })
+            .then(function (data) {
+                if(data=='Success'){
+                    alert("Your changes have succesfully been changed! You will now be logged out.")
+                    window.location.href="/logout"
+                }
+                else if(data=='nopass'){
+                    var p = document.getElementById("error")
+                    p.innerHTML = "Please Enter Current Password"
+                    p.style.visibility = "visible"
+                }
+                else if(data=='wrongpass'){
+                    var p = document.getElementById("error")
+                    p.innerHTML = "Incorrect Password"
+                    p.style.visibility = "visible"
+                }
+                else if(data=='nomatch'){
+                    var p = document.getElementById("error")
+                    p.innerHTML = "New Passwords do not match"
+                    p.style.visibility = "visible"
+                }
+            });
+    }
+</script>
+{% endblock content %}
